@@ -67,22 +67,26 @@ try {
 }
 });
 
-// Express route to fetch dealers by a particular state
 app.get('/fetchDealers/:state', async (req, res) => {
   try {
-    // Fetch dealers whose state matches the requested state
-    const documents = await Dealers.find({ state: req.params.state });
-    res.json(documents);
+    // Fetch dealers where the `state` field matches `req.params.state`
+    const documents = await Dealers.find({ 'address.state': req.params.state });
+    if (documents.length > 0) {
+      res.json(documents);
+    } else {
+      res.status(404).json({ error: 'No dealers found for this state' });
+    }
   } catch (error) {
+    console.error("Error details:", error);
     res.status(500).json({ error: 'Error fetching documents' });
   }
 });
 
-// Express route to fetch a dealer by a particular id
+
+// Route to fetch dealer by ID with ObjectId conversion
 app.get('/fetchDealer/:id', async (req, res) => {
   try {
-    // Fetch a dealer by its unique ID
-    const document = await Dealers.findById(req.params.id);
+    const document = await Dealers.findById(mongoose.Types.ObjectId(req.params.id));
     if (document) {
       res.json(document);
     } else {
