@@ -13,7 +13,9 @@ from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
-# from .populate import initiate
+from .models import CarMake, CarModel
+from django.views.decorators.http import require_GET
+from .populate import initiate
 
 
 # Get an instance of a logger
@@ -21,7 +23,22 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-
+@require_GET
+def get_cars(request):
+    try:
+        # Check if CarMake table is empty and populate it if necessary
+        if not CarMake.objects.exists():
+            initiate()
+        
+        # Fetch all car models along with their make
+        car_models = CarModel.objects.select_related('car_make')
+        cars = [{"CarModel": car_model.name, "CarMake": car_model.car_make.name} for car_model in car_models]
+        
+        return JsonResponse({"CarModels": cars})
+    except Exception as e:
+        # Return error message in case of issues
+        return JsonResponse({"error": str(e)}, status=500)
+    
 # Create a `login_request` view to handle sign in request
 @csrf_exempt
 def login_user(request):

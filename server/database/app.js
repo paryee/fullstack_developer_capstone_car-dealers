@@ -67,9 +67,9 @@ try {
 }
 });
 
+// Fetch dealers where the `state` field matches `req.params.state`
 app.get('/fetchDealers/:state', async (req, res) => {
   try {
-    // Fetch dealers where the `state` field matches `req.params.state`
     const documents = await Dealers.find({ 'address.state': req.params.state });
     if (documents.length > 0) {
       res.json(documents);

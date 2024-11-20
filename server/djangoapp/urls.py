@@ -18,5 +18,5 @@ urlpatterns = [
 
     # other path
      path('logout/', views.logout_view, name='logout'),
-
+     path('get-cars', views.get_cars, name='get_cars'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
