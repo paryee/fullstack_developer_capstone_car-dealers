@@ -93,8 +93,7 @@
     // Fetch Cars from Backend
     const getCars = async () => {
       try {
-        const response = await fetch('/djangoapp/get-cars');
- // Ensure this matches your Django endpoint
+        const response = await fetch('/djangoapp/get-cars'); // Ensure this matches your Django endpoint
         const data = await response.json();
 
         const carListDiv = document.getElementById('carList');
